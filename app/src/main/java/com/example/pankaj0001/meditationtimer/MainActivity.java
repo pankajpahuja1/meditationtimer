@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button go;
     MediaPlayer mp;
-
+    CountDownTimer c;
 
 
 
@@ -29,56 +29,60 @@ public class MainActivity extends AppCompatActivity {
     public void runn(View view)
     {
 
-        CountDownTimer c= new CountDownTimer(seekBar.getProgress()*1000,1000){
-
-            @Override
-            public void onTick(long millisUntilFinished) {
-                // int a=1;
-
-                System.out.println(millisUntilFinished/1000+"countdown");
-
-                //  int a=Integer.parseInt(millisUntilFinished/1000) ;
-
-                update(millisUntilFinished/1000);
-
-                //  Log.i("ye chalega countdown","a++_"+a);
-
-            }
-
-            @Override
-            public void onFinish() {
-               // seekBar.setVisibility(View.VISIBLE);
-                seekBar.setEnabled(true);
-                mp.pause();
-                go.setText("Go");
-                timeshow.setText("00:00");
-
-            }
-        };
 
 
 
-
-        //int a=seekBar.getVisibility();
 
         if(seekBar.isEnabled()) {
+
             seekBar.setEnabled(false);
+
+
             seekBar.setVisibility(View.INVISIBLE);
             go.setText("Stop");
+             c= new CountDownTimer(seekBar.getProgress()*1000,1000){
+
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    update(millisUntilFinished/1000);
+
+
+
+                }
+
+                @Override
+                public void onFinish() {
+                    seekBar.setVisibility(View.VISIBLE);
+                    seekBar.setEnabled(true);
+                    mp.pause();
+                    go.setText("Go");
+                    timeshow.setText("00:00");
+
+                }
+            };
             c.start();
             mp.start();
 
         }
         else if(!seekBar.isEnabled()) {
-            seekBar.setEnabled(true);
-            c.onFinish();
 
-           // mp.stop();
+
+
+
+
+            c.cancel();
+            seekBar.setVisibility(View.VISIBLE);
+            seekBar.setEnabled(true);
+         //   System.out.println(seekBar.isEnabled()+"now it should be enaabled again");
+            mp.pause();
+            go.setText("Go");
+            timeshow.setText("00:00");
+            seekBar.setProgress(0);
+
+
+            // mp.stop();
 
            // c.cancel();
-
-
-
         }
 
 
@@ -99,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     {
         long min= (long)prog/60;
         long sec= prog-min*60;
-int b=9;
+
           //  Log.i("ye update chala",""+b++);
       //  timeshow.setText(Integer.toString(min)+":"+Integer.toString(sec));
         timeshow.setText(min+":"+sec);
@@ -139,7 +143,12 @@ int b=9;
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 System.out.println(progress);
-                update(progress);
+                long min= (long)progress/60;
+                long sec= progress-min*60;
+
+                //  Log.i("ye update chala",""+b++);
+                //  timeshow.setText(Integer.toString(min)+":"+Integer.toString(sec));
+                timeshow.setText(min+":"+sec);
 
             }
 
